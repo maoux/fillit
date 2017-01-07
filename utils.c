@@ -13,3 +13,9 @@ const char *byte_to_binary(int x)
 
     return b;
 }
+
+void print_pieces(const t_env * const pieces){
+	for(int i = 0; i < pieces->size; i++){
+        printf("Piece %d is %s\n", i, byte_to_binary(pieces->tab[i]));
+    }
+}

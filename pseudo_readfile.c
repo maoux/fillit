@@ -1,6 +1,6 @@
 #include "fillit.h"
 
-t_env *read_file(const char * const file_name)
+const t_env * const read_file(const char * const file_name)
 {
 	(void)file_name;
 	t_env *pieces;

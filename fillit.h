@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:24:58 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/07 18:03:11 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/07 18:20:58 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ typedef struct	s_env
 }				t_env;
 
 //fonction parsing appele par le main
-t_env		*read_file(const char * const file_name);
+const t_env		* const read_file(const char * const file_name);
+int			find_best_placement(const t_env * const pieces);
 
 //fonction erreur appelant exit
 void		error();
