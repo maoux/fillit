@@ -6,12 +6,12 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/02 15:54:05 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/04 18:56:42 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/07 17:37:01 by heynard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "libft/libft.h"
+#include "includes/libft.h"
 
 static void		create_fd_buffer(int fd, t_gnl *gnl, void **swap, int *counters)
 {
