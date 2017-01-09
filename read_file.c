@@ -6,61 +6,55 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:56:05 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/07 20:02:36 by heynard          ###   ########.fr       */
+/*   Updated: 2017/01/09 23:12:02 by heynard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-static short int	set_piece(char *line)
+static short int	check_buffer(char *buffer)
 {
 	short int		piece;
 	int				i;
 
-	i = 0;
 	piece = 0x0000;
-	while (line[i] != '\0')
+	i = 0;
+	if (ft_strlen(buffer) == 16)
 	{
-		if (line[i] != '.' && line[i] != '#')
-			error();
-		if (line[i] == '#')
-			piece = piece | (1 << i);
-		i++;
+		while (buffer[i] != '\0')
+		{
+			if (buffer[i] == '#')
+				piece = piece | (0x8000 >> i);
+			if (buffer[i] != '.' && buffer[i] != '#')
+				error();
+			i++;
+		}
 	}
-//	if (check_piece(piece) < 0)
-//		error();
 	return (piece);
 }
-static short int	*set_tab(int fd, short int *tab, int *s)
-{
-	char			**line;
-	char			*buf;
-	int				nbc;
-	int				test;
 
-	test = 0;
-	buf = NULL;
-	while ((nbc = get_next_line(fd, line)) > 0 || test == 1)
+static void			set_tab(int fd, short int *tab, int *s)
+{
+	char			*line;
+	char			*buffer;
+	short int		tmp;
+	int				gnl;
+
+	buffer = NULL;
+	while ((gnl = get_next_line(fd, &line)) > 0)
 	{
-		if (nbc == 0)
-			test = 0;
-		if (ft_strequ(*line, "\n"))
+		buffer = ft_strjoin(buffer, line);
+		if ((tmp = check_buffer(buffer)) != 0)
 		{
-			tab[*s++] = set_piece(buf);
-			free(buf);
-			buf = NULL;
-		}
-		else
-		{
-			*line[nbc] = '\0';
-			if (buf == NULL)
-				buf = ft_strdup(*line);
-			else
-				buf = ft_strjoin(buf, *line);
+			buffer = NULL;
+			tab[*s] = tmp;
+			*s += 1;
 		}
 	}
-	tab[*s++] = set_piece(buf);
-	return (tab);
+	free(line);
+	free(buffer);
+	if (gnl < 0)
+		error();
 }
 
 t_env				*read_file(const char *file_name)
@@ -74,10 +68,10 @@ t_env				*read_file(const char *file_name)
 		error();
 	if ((env = malloc(sizeof(t_env))) == NULL)
 		error();
-	size = 0;
-	if ((tab = (short int *)malloc(26 * sizeof(short int))) == NULL)
+	if ((tab = (short int *)malloc(sizeof(short int) * 26)) == NULL)
 		error();
-	tab = set_tab(fd, tab, &size);
+	size = 0;
+	set_tab(fd, tab, &size);
 	env->tab = tab;
 	env->size = (unsigned char)size;
 	if (close(fd) < 0)
