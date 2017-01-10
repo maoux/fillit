@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:24:58 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/10 19:40:56 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/10 20:55:05 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "libft/includes/get_next_line.h"
 # include "libft/includes/libft.h"
 
-typedef unsigned int	t_bmask;
+typedef unsigned short	t_bmask;
 typedef struct	s_env
 {
 	unsigned char	size;
