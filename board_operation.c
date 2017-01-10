@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/10 15:39:58 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/10 15:59:33 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/10 20:17:53 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_board_cst create_board(unsigned short size)
 	new_board = malloc(sizeof(t_board));
 	new_board->size = size;
 	new_board->board = malloc(size * sizeof(char*));
-	shorts_count = (size / 8) + (size % 8 ? 1 : 0);
+	shorts_count = (size / sizeof(t_bmask)) + (size % sizeof(t_bmask) ? 1 : 0);
 	new_board->bit_mask = malloc(size * sizeof(t_bmask*));
 	while (i < size)
 	{
@@ -44,7 +44,7 @@ t_board_cst duplicate_board(t_board_cst board)
 	new_board = malloc(sizeof(t_board));
 	new_board->size = board->size;
 	new_board->board = malloc(board->size * sizeof(char*));
-	shorts_count = (board->size / 8) + (board->size % 8 ? 1 : 0);
+	shorts_count = (board->size / sizeof(t_bmask)) + (board->size % sizeof(t_bmask) ? 1 : 0);
 	new_board->bit_mask = malloc(board->size * sizeof(t_bmask*));
 	while (i < board->size)
 	{
