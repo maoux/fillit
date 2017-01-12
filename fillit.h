@@ -36,8 +36,8 @@ const t_env	* const	read_file(const char * const file_name);
 int					find_best_placement(const t_env * const pieces);
 void				print_board(t_board_cst board);
 
-t_board_cst create_board(unsigned short size);
-t_board_cst duplicate_board(t_board_cst board);
+t_board	*create_board(unsigned short size);
+t_board	*duplicate_board(t_board_cst board);
 void    free_board(t_board *board);
 
 unsigned short  *get_piece_size(unsigned short piece);

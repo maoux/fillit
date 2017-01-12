@@ -15,8 +15,9 @@
 
 unsigned short	*get_piece_size(unsigned short piece)
 {
-	unsigned short	size[2];
+	unsigned short	*size;
 
+	size = malloc(2 * sizeof(unsigned short));
 	size[0] = 1;
 	size[0] += piece & 0b0100010001000100 ? 1 : 0; // 0x4444
 	size[0] += piece & 0b0010001000100010 ? 1 : 0; // 0x2222
@@ -43,6 +44,7 @@ unsigned short	get_pieces_size(t_env_cst pieces)
 		val = get_piece_size(pieces->tab[i++]);
 		w += val[0];
 		h += val[1];
+		free(val);
 	}
 	printf("Max w%d h%d\n", w, h);
 	return (h < w ? w : h);

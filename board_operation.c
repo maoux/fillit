@@ -13,7 +13,7 @@
 #include "fillit.h"
 #include "utils.h"
 
-t_board_cst create_board(unsigned short size)
+t_board		*create_board(unsigned short size)
 {
 	t_board			*new_board;
 	unsigned short	i;
@@ -31,10 +31,10 @@ t_board_cst create_board(unsigned short size)
 		new_board->bit_mask[i] = ft_memset(ft_memalloc(shorts_count / sizeof(t_bmask)), 0, shorts_count);
 		i++;
 	}
-	return (new_board);	
+	return (new_board);
 }
 
-t_board_cst duplicate_board(t_board_cst board)
+t_board		*duplicate_board(t_board_cst board)
 {
 	t_board			*new_board;
 	unsigned short	i;
@@ -52,7 +52,7 @@ t_board_cst duplicate_board(t_board_cst board)
 		new_board->bit_mask[i] = ft_memcpy(malloc(shorts_count * sizeof(t_bmask)), board->bit_mask[i], shorts_count);
 		i++;
 	}
-	return (new_board);	
+	return (new_board);
 }
 
 void	free_board(t_board *board)
