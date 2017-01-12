@@ -7,11 +7,11 @@ const t_env * const read_file(const char * const file_name)
 	
 	pieces = ft_memalloc(sizeof(t_env));
 	
-	pieces->size = 3;
-	pieces->tab = ft_memalloc(3 * sizeof(short int));
-	pieces->tab[0] = 0b0100010011000000;
-	pieces->tab[1] = 0b1100110000000000;
-	pieces->tab[2] = 0b1000100010001000;
-//	pieces->tab[3] = 0b1000100010001000;
+	pieces->size = 4;
+	pieces->tab = ft_memalloc(4 * sizeof(short int));
+	pieces->tab[0] = 0b1100010001000000;
+	pieces->tab[1] = 0b1111000000000000;
+	pieces->tab[2] = 0b10001110000000000;
+	pieces->tab[3] = 0b11000110000000000;
 	return pieces;
 }

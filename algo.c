@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 18:20:29 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/12 21:55:27 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/12 22:51:00 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static t_board *place_piece(unsigned short piece, t_board_cst board, unsigned sh
 	t_bmask			piece_l[4];
 	unsigned short	*piece_size;
 	unsigned short	line;
+	unsigned short piece_L;
 
 //	printf("Trying at x=%d y=%d with piece=%s\n", x, y, byte_to_binary(piece));
 	piece_size = get_piece_size(piece);
@@ -67,7 +68,7 @@ static t_board *place_piece(unsigned short piece, t_board_cst board, unsigned sh
 			stepboard->board[y + line][x + 1] = piece_l[line] & 0b0100 ? 'A' + piece_idx : stepboard->board[y + line][x + 1];
 			stepboard->board[y + line][x + 2] = piece_l[line] & 0b0010 ? 'A' + piece_idx : stepboard->board[y + line][x + 2];
 			stepboard->board[y + line][x + 3] = piece_l[line] & 0b0001 ? 'A' + piece_idx : stepboard->board[y + line][x + 3];
-			unsigned short piece_L = (unsigned short)piece_l[line];
+			piece_L = (unsigned short)piece_l[line];
 			piece_L <<= 4;
 			piece_L >>= x;
 			(stepboard->bit_mask[y+line])[x / BITS_PER_BMASK] += piece_L;
@@ -112,53 +113,41 @@ static inline unsigned short max(unsigned short a, unsigned short b)
 	return (a > b ? a : b);
 }
 
-static unsigned short	**board_size(t_board_cst board)
+static unsigned short	*board_size(t_board_cst board)
 {
-	t_bmask	last_l_umask;
 	unsigned short x;
 	unsigned short y;
-	unsigned short **ret;
-	t_bmask		val;
-	unsigned short shorts_count;
+	unsigned short *ret;
 
-    shorts_count = (board->size / BITS_PER_BMASK) + ((board->size % BITS_PER_BMASK * 8) ? 1 : 0);
 	ret = malloc(2 * sizeof(unsigned short *));
-	ret[0] = ft_memalloc(2 * sizeof(unsigned short));
-	ret[1] = ft_memalloc(2 * sizeof(unsigned short));
-	ret[0][0] = board->size;
-	ret[0][1] = board->size;
-	last_l_umask = sum_n_bits(BITS_PER_BMASK - (board->size % (sizeof(t_bmask) * 8)));
+	ret[0] = 0;
+	ret[1] = 0;
 	y = 0;
 	while (y < board->size)
 	{
 		x = 0;
-		while (x < shorts_count)
+		while (x < board->size)
 		{
-			val = board->bit_mask[y][x];
-			if (x == shorts_count - 1)
-				val &= ~last_l_umask;
-			if (val)
+			if (board->board[y][x] != '.')
 			{
 				// Define Y
-				ret[0][1] = min(ret[0][1], y);
-				ret[1][1] = max(ret[1][1], y);
+				ret[1] = max(ret[1], y);
 			
 				// Define X
-				ret[0][0] = min(ret[0][0], get_offset(val));
-				ret[1][0] = max(ret[1][0], get_last_offset(val));
+				ret[0] = max(ret[0], x);
 			}
 			x++;
 		}
 		y++;
 	}
-//	printf("from %d:%d to %d:%d\n", ret[0][0], ret[0][1], ret[1][0], ret[1][1]);
+	printf("TO %d:%d\n", ret[0], ret[1]);
 	return (ret);
 }
 
 static t_board *get_best_board(t_board *candidate_board, t_board *best_board)
 {
-	unsigned short	**candidate_size;
-	unsigned short	**best_size;
+	unsigned short	*candidate_size;
+	unsigned short	*best_size;
 	unsigned short	i[2];
 	unsigned short candidate_sq;
 	unsigned short best_sq;
@@ -168,44 +157,24 @@ static t_board *get_best_board(t_board *candidate_board, t_board *best_board)
 	if (best_board == NULL)
 		return (candidate_board);
 	candidate_size = board_size(candidate_board);
-	candidate_sq = max(candidate_size[1][0] - candidate_size[0][0],
-					   candidate_size[1][1] - candidate_size[0][1]);
 	best_size = board_size(best_board);
-	best_sq = max(best_size[1][0] - best_size[0][0],
-				  best_size[1][1] - best_size[0][1]);
-	if (candidate_sq > best_sq ||
-		candidate_size[0][0] > best_size[0][0] ||
-		candidate_size[0][1] > best_size[0][1])
+	if (max(candidate_size[0], candidate_size[1]) > max(best_size[0], best_size[1]))
 	{
-		free(candidate_size[0]);
-		free(candidate_size[1]);
 		free(candidate_size);
-		free(best_size[0]);
-		free(best_size[1]);
 		free(best_size);
 		return (best_board);
 	}
 	else 
 	{
-		if (candidate_sq == best_sq &&
-			candidate_size[0][0] == best_size[0][0] &&
-			candidate_size[0][1] == best_size[0][1])
+		if (max(candidate_size[0], candidate_size[1]) == max(best_size[0], best_size[1]))
 		{
-			free(candidate_size[0]);
-			free(candidate_size[1]);
 			free(candidate_size);
-			free(best_size[0]);
-			free(best_size[1]);
 			free(best_size);
 			return (best_board);
 		}
 		else
 		{
-			free(candidate_size[0]);
-			free(candidate_size[1]);
 			free(candidate_size);
-			free(best_size[0]);
-			free(best_size[1]);
 			free(best_size);
 			return (candidate_board);
 		}
@@ -218,11 +187,13 @@ static t_board	*choose_best_board(t_board *candidate_board, t_board *best_board)
 	board = get_best_board(candidate_board, best_board);
 	if (board == candidate_board)
 	{
+	printf("Best board is candidate\n");
 		if (best_board != NULL)
 			free_board(best_board);
 	}
 	else
 	{
+	printf("Best board is unchanged\n");
 		if (candidate_board != NULL)
 			free_board(candidate_board);
 	}
@@ -238,7 +209,7 @@ static short	abort_board(t_board_cst best_board_until, t_board_cst in_test)
 	b_size = board_size(in_test);
 }
 
-static  t_board	*f_b_p_rec(t_env_cst pieces, t_board_cst board, unsigned char piece_idx)
+static  t_board	*f_b_p_rec(t_env_cst pieces, t_board_cst board, unsigned char piece_idx, t_board **best)
 {
 	unsigned short	x;
 	unsigned short	y;
@@ -248,6 +219,8 @@ static  t_board	*f_b_p_rec(t_env_cst pieces, t_board_cst board, unsigned char pi
 	printf("Doing piece %d: %s\n", piece_idx, byte_to_binary(pieces->tab[piece_idx]));
 	best_board = NULL;
 	y = 0;
+
+	int k = 0;
 	while (y < board->size)
 	{
 		printf("--- Doing l%d ---\n", y);
@@ -257,30 +230,54 @@ static  t_board	*f_b_p_rec(t_env_cst pieces, t_board_cst board, unsigned char pi
 			tmp_board = place_piece(pieces->tab[piece_idx], board, x, y, piece_idx);
 			if (tmp_board != NULL) // If piece was posed OK ok the board
 			{
-			printf("Board taken piece idx %d\n", piece_idx);
-				print_board(tmp_board);
-				printf("\n\n");
-//				if (get_best_board(tmp_board, best_board) != tmp_board)
-//					free_board(tmp_board);
-//				else
-if (piece_idx < pieces->size)
-					best_board = choose_best_board(f_b_p_rec(pieces, tmp_board, piece_idx + 1), best_board);
+				printf("\n");
+				if (get_best_board(tmp_board, *best) != tmp_board)
+				{
+					free_board(tmp_board);
+					printf("Abort\n");
+				}
 				else
-					best_board = choose_best_board(tmp_board, best_board);
+				{
+						printf("Board taken piece idx %d\n", piece_idx);
+						print_board(tmp_board);
+					if (piece_idx + 1 < pieces->size)
+					{
+						best_board = choose_best_board(f_b_p_rec(pieces, tmp_board, piece_idx + 1, best), best_board);
+					}
+					else
+					{
+						best_board = choose_best_board(tmp_board, best_board);
+						*best = best_board;
+					}
+				}
+			}
+
+
+			if(piece_idx < pieces->size - 1)
+			{
+				printf("Best until there:\n");
+				if (*best)
+					print_board(*best);
+				else
+					printf("NONE\n");
+				if(piece_idx == 0 && k++ > 0)
+					exit(0);
 			}
 			x++;
 		}
 		y++;
 	}
-	return (best_board);
+//	if(best_board != NULL)
+//		*best = best_board;
 }
 
 int         find_best_placement(t_env_cst pieces)
 {
 
 	t_board	*best_board;
-//	print_pieces(pieces);
-	best_board = f_b_p_rec(pieces, create_board(get_pieces_size(pieces)), 0);
+
+	best_board = NULL;
+	f_b_p_rec(pieces, create_board(get_pieces_size(pieces)), 0, &best_board);
 	printf("best board: %p\n", best_board);
 	print_board(best_board);
 
