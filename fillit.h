@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:24:58 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/09 22:53:53 by heynard          ###   ########.fr       */
+/*   Updated: 2017/01/12 18:07:32 by heynard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,13 @@
 
 typedef struct	s_env
 {
-	unsigned char	size;
-	short int		*tab;
+	unsigned char		size;
+	unsigned short int	*tab;
 }				t_env;
 
 //fonction parsing appele par le main
 t_env		*read_file(char const *file_name);
+int			check_env(t_env *env);
 
 //fonction erreur appelant exit
 void		error();

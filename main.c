@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:42:06 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/09 23:12:47 by heynard          ###   ########.fr       */
+/*   Updated: 2017/01/12 18:06:36 by heynard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int			main(int argc, char **argv)
 	if (argc != 2)
 		error();
 	env = read_file(argv[1]);
+	if (check_env(env) < 0)
+		error();
 	//test
 	print_pieces(env);
 	//
