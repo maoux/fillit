@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 18:20:29 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/12 22:51:00 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/13 02:03:48 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static short int	can_place_line(t_bmask line, t_bmask *boardline, unsigned short
 	line <<= 4 - x;
 	str1 = ft_strdup(byte_to_binary((unsigned int)line));
 	str2 = ft_strdup(byte_to_binary((unsigned int)board_cell));
-//	printf("Piece_line=%s, table_line=%s\n", str1, str2);
+	printf("Piece_line=%s, table_line=%s\n", str1, str2);
 	free(str1);
 	free(str2);
 	return (board_cell & line ? 0 : 1);
