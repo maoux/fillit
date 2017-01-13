@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 18:20:29 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/13 02:03:48 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/13 02:41:26 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,15 @@
 static short int	can_place_line(t_bmask line, t_bmask *boardline, unsigned short x)
 {
 
-	unsigned int	board_cells;
+	unsigned short	board_cells;
 	t_bmask			board_cell;
 	char *str1;
 	char *str2;
 
-	board_cells = boardline[x / 8];
+	board_cells = boardline[x / BITS_PER_BMASK];
+	board_cells = board_cells << x % 8;
 	board_cell = *((t_bmask*)(&board_cells));
-	line <<= 4 - x;
+	line <<= 4;
 	str1 = ft_strdup(byte_to_binary((unsigned int)line));
 	str2 = ft_strdup(byte_to_binary((unsigned int)board_cell));
 	printf("Piece_line=%s, table_line=%s\n", str1, str2);
@@ -60,25 +61,33 @@ static t_board *place_piece(unsigned short piece, t_board_cst board, unsigned sh
 	   (!piece_l[3] || (y + 3 < board->size && can_place_line(piece_l[3], board->bit_mask[y + 3], x))))
 	{
 		stepboard = duplicate_board(board);
-//		printf("Can place piece\n");
+		printf("Can place piece\n");
 		line = 0;
 		while (line < 4 && y + line < stepboard->size)
 		{
-			stepboard->board[y + line][x + 0] = piece_l[line] & 0b1000 ? 'A' + piece_idx : stepboard->board[y + line][x + 0];
-			stepboard->board[y + line][x + 1] = piece_l[line] & 0b0100 ? 'A' + piece_idx : stepboard->board[y + line][x + 1];
-			stepboard->board[y + line][x + 2] = piece_l[line] & 0b0010 ? 'A' + piece_idx : stepboard->board[y + line][x + 2];
-			stepboard->board[y + line][x + 3] = piece_l[line] & 0b0001 ? 'A' + piece_idx : stepboard->board[y + line][x + 3];
-			piece_L = (unsigned short)piece_l[line];
-			piece_L <<= 4;
+			char *str = ft_strdup(byte_to_binary(piece_l[line]));
+			printf("For char %c, value %s\n", 'A' + piece_idx, str);
+			if(piece_l[line] & 0b1000)
+				stepboard->board[y + line][x + 0] = 'A' + piece_idx;
+			if(piece_l[line] & 0b0100)
+				stepboard->board[y + line][x + 1] = 'A' + piece_idx;
+			if(piece_l[line] & 0b0010)
+				stepboard->board[y + line][x + 2] = 'A' + piece_idx;
+			if(piece_l[line] & 0b0001)
+				stepboard->board[y + line][x + 3] = 'A' + piece_idx;
+			piece_L = piece_l[line];
+			piece_L <<= 12;
 			piece_L >>= x;
-			(stepboard->bit_mask[y+line])[x / BITS_PER_BMASK] += piece_L;
+			(unsigned short)(stepboard->bit_mask[y+line][x / BITS_PER_BMASK]) |= piece_L;
+			str = ft_strdup(byte_to_binary(stepboard->bit_mask[y+line][x / BITS_PER_BMASK]));
+			printf("%s\n", str);
 			line++;
 		}
 		return (stepboard);
 	}
 	else
 	{
-//		printf("CANNOT place piece\n");
+		printf("CANNOT place piece\n");
 		return (NULL);
 	}
 
