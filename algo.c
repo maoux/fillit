@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 18:20:29 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/13 02:41:26 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/13 03:08:16 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ static t_board *place_piece(unsigned short piece, t_board_cst board, unsigned sh
 	t_bmask			piece_l[4];
 	unsigned short	*piece_size;
 	unsigned short	line;
-	unsigned short piece_L;
+	unsigned short	piece_L;
 
-//	printf("Trying at x=%d y=%d with piece=%s\n", x, y, byte_to_binary(piece));
+	printf("Trying at x=%d y=%d with piece=%s\n", x, y, byte_to_binary(piece));
 	piece_size = get_piece_size(piece);
 	if (((x + piece_size[0]) > board->size) || ((y + piece_size[1]) > board->size))
 		return (NULL);
@@ -77,10 +77,16 @@ static t_board *place_piece(unsigned short piece, t_board_cst board, unsigned sh
 				stepboard->board[y + line][x + 3] = 'A' + piece_idx;
 			piece_L = piece_l[line];
 			piece_L <<= 12;
-			piece_L >>= x;
-			(unsigned short)(stepboard->bit_mask[y+line][x / BITS_PER_BMASK]) |= piece_L;
+			piece_L >>= x % 8;
+			str = ft_strdup(byte_to_binary(piece_L));
+			printf("Offset value: %s\n", str);
+			*((unsigned short *)(&(((t_bmask*)stepboard->board[y + line]))[x / 8])) += piece_L;
+/*			int case = x/BITS_PER_BMASK;
+			t_bmask *tmp = stepboard->bit_mask[y+line];
+			tmp += (x - 4) / BITS_PER_BMASK;
+			*((unsigned short*)tmp) |= piece_L;
 			str = ft_strdup(byte_to_binary(stepboard->bit_mask[y+line][x / BITS_PER_BMASK]));
-			printf("%s\n", str);
+			printf("%s\n", str);*/
 			line++;
 		}
 		return (stepboard);
