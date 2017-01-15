@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/10 15:39:58 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/12 20:50:38 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/15 14:44:02 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,15 @@ t_board		*create_board(unsigned short size)
 	new_board = malloc(sizeof(t_board));
 	new_board->size = size;
 	new_board->board = malloc(size * sizeof(char*));
-	shorts_count = (size / BITS_PER_BMASK) + ((size % BITS_PER_BMASK * 8) ? 1 : 0);
+	shorts_count = (size / BITS_PER_BMASK) + (((size % BITS_PER_BMASK) * 8) ? 1 : 0);
 	printf("Using bmask of %d bytes\n", shorts_count);
 	new_board->bit_mask = malloc(size * sizeof(t_bmask*));
 	while (i < size)
 	{
 		new_board->board[i] = ft_memset(ft_memalloc(size * sizeof(char)), '.', size);
 		new_board->bit_mask[i] = ft_memset(ft_memalloc(shorts_count), 0, shorts_count);
-		new_board->bit_mask[i][shorts_count - 1] = sum_n_bits(BITS_PER_BMASK - (size % (sizeof(t_bmask) * 8)));
+		new_board->bit_mask[i][shorts_count - 1] = (t_bmask)sum_n_bits(BITS_PER_BMASK - (size % (sizeof(t_bmask) * 8)));
+		printf("BMask board: %s\n", byte_to_binary(new_board->bit_mask[i][shorts_count - 1]));
 		i++;
 	}
 	return (new_board);

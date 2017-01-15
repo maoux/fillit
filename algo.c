@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 18:20:29 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/13 03:08:16 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/15 15:03:16 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,22 @@
 
 static short int	can_place_line(t_bmask line, t_bmask *boardline, unsigned short x)
 {
-
+	unsigned short line_expanded;
 	unsigned short	board_cells;
-	t_bmask			board_cell;
 	char *str1;
 	char *str2;
 
-	board_cells = boardline[x / BITS_PER_BMASK];
-	board_cells = board_cells << x % 8;
-	board_cell = *((t_bmask*)(&board_cells));
-	line <<= 4;
-	str1 = ft_strdup(byte_to_binary((unsigned int)line));
-	str2 = ft_strdup(byte_to_binary((unsigned int)board_cell));
+	line_expanded = line;
+	line_expanded <<= 12;
+	line_expanded >>= x % 8;
+//	boardline-= 2;
+	board_cells = *((unsigned short *)(&(((boardline))[1 + (x / 8)])));
+	str1 = ft_strdup(byte_to_binary((unsigned int)line_expanded));
+	str2 = ft_strdup(byte_to_binary((unsigned int)board_cells));
 	printf("Piece_line=%s, table_line=%s\n", str1, str2);
 	free(str1);
 	free(str2);
-	return (board_cell & line ? 0 : 1);
+	return (board_cells & line_expanded ? 0 : 1);
 }
 
 static t_board *place_piece(unsigned short piece, t_board_cst board, unsigned short x, unsigned short y, unsigned short piece_idx)
@@ -76,11 +76,18 @@ static t_board *place_piece(unsigned short piece, t_board_cst board, unsigned sh
 			if(piece_l[line] & 0b0001)
 				stepboard->board[y + line][x + 3] = 'A' + piece_idx;
 			piece_L = piece_l[line];
+// 0b0000 0000 0000 1110
+// 0b1110 0000 0000 0000
 			piece_L <<= 12;
 			piece_L >>= x % 8;
 			str = ft_strdup(byte_to_binary(piece_L));
 			printf("Offset value: %s\n", str);
-			*((unsigned short *)(&(((t_bmask*)stepboard->board[y + line]))[x / 8])) += piece_L;
+			unsigned short *bit_mask = &(((t_bmask*)stepboard->bit_mask[y + line]))[0 + (x / 8)];
+			str = ft_strdup(byte_to_binary(*bit_mask));
+			printf("Board mask:   %s\n", str);
+			*bit_mask |= piece_L;
+			str = ft_strdup(byte_to_binary(*bit_mask));
+			printf("Board mask:   %s\n", str);
 /*			int case = x/BITS_PER_BMASK;
 			t_bmask *tmp = stepboard->bit_mask[y+line];
 			tmp += (x - 4) / BITS_PER_BMASK;
@@ -243,6 +250,8 @@ static  t_board	*f_b_p_rec(t_env_cst pieces, t_board_cst board, unsigned char pi
 		while (x < board->size)
 		{
 			tmp_board = place_piece(pieces->tab[piece_idx], board, x, y, piece_idx);
+			if(x > 5)
+				exit(0);
 			if (tmp_board != NULL) // If piece was posed OK ok the board
 			{
 				printf("\n");
@@ -284,6 +293,7 @@ static  t_board	*f_b_p_rec(t_env_cst pieces, t_board_cst board, unsigned char pi
 	}
 //	if(best_board != NULL)
 //		*best = best_board;
+	return (best_board);
 }
 
 int         find_best_placement(t_env_cst pieces)
