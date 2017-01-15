@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:24:58 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/15 16:52:04 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/15 17:24:15 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@
 # define BITS_PER_BMASK (sizeof(t_bmask) * 8)
 
 typedef unsigned char	t_bmask;
-typedef struct	s_env
+typedef struct	s_pieces
 {
 	unsigned char	size;
 	short int		*tab;
 }				t_env;
+
 typedef const t_env * const t_env_cst;
 typedef struct s_board
 {
@@ -46,6 +47,9 @@ void    free_board(t_board *board);
 
 unsigned short  *get_piece_size(unsigned short piece);
 unsigned short  get_pieces_size(t_env_cst pieces);
+
+//fonction parsing appele par le main
+t_env		*read_file(const char const *file_name);
 //fonction erreur appelant exit
 void		error();
 
