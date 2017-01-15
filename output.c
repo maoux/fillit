@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 18:56:18 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/10 15:48:24 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/15 18:55:07 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 void print_board(t_board_cst board)
 {
 	char *tmp;
-	unsigned short linec;
+	t_ushort linec;
 
 	linec = 0;
-	while (linec < board->size)
+	while (linec < board->area[2])
 	{
-		tmp = ft_strnew(board->size);
-		ft_memcpy(tmp, board->board[linec], board->size);
+		tmp = ft_strnew(board->area[2]);
+		ft_memcpy(tmp, board->board[linec], board->area[2]);
 		ft_putstr(tmp);
 		ft_putchar('\n');
 		free(tmp);

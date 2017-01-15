@@ -13,11 +13,11 @@
 #include "fillit.h"
 #include "utils.h"
 
-unsigned short	*get_piece_size(unsigned short piece)
+t_ushort	*get_piece_size(unsigned short piece)
 {
-	unsigned short	*size;
+	t_ushort	*size;
 
-	size = malloc(2 * sizeof(unsigned short));
+	size = malloc(2 * sizeof(t_ushort));
 	size[0] = 1;
 	size[0] += piece & 0b0100010001000100 ? 1 : 0; // 0x4444
 	size[0] += piece & 0b0010001000100010 ? 1 : 0; // 0x2222
@@ -29,12 +29,12 @@ unsigned short	*get_piece_size(unsigned short piece)
 	return (size);
 }
 
-unsigned short	get_pieces_size(t_env_cst pieces)
+t_ushort	get_pieces_size(t_env_cst pieces)
 {
-	unsigned short	w;
-	unsigned short	h;
+	t_ushort	w;
+	t_ushort	h;
 	unsigned char	i;
-	unsigned short	*val;
+	t_ushort	*val;
 
 	w = 0;
 	h = 0;
