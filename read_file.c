@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:56:05 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/12 21:35:24 by heynard          ###   ########.fr       */
+/*   Updated: 2017/01/15 20:06:45 by heynard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,23 @@ static unsigned short int	check_buffer(char *buffer)
 	piece = 0x0000;
 	position = 0;
 	i = 0;
-	if (buffer[0] == '\n' || (buffer[20] != '\n' && buffer[20] != '\0'))
+	if (buffer[4] != '\n' ||
+		buffer[9] != '\n' ||
+		buffer[14] != '\n' ||
+		buffer[19] != '\n' ||
+		(buffer[20] != '\n' && buffer[20] != '\0'))
 		return (0);
-	while (buffer[i] != '\0')
+	while (i < 19)
 	{
 		if (buffer[i] == '#')
 			piece = piece | (0x8000 >> position);
-		if (buffer[i] != '\n' && buffer[i] != '.' && buffer[i] != '#')
-			return (0);
-		if (buffer[i] != '\n')
+		if ((i != 4 && i != 9 && i != 14) 
+			|| i == 0)
+		{
+			if (buffer[i] != '.' && buffer[i] != '#')
+				return (0);
 			position++;
+		}
 		i++;
 	}
 	return (piece);
