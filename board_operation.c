@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/10 15:39:58 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/15 15:36:45 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/15 16:52:56 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ t_board		*create_board(unsigned short size)
 //		printf("BMask board: %s\n", byte_to_binary(new_board->bit_mask[i][shorts_count - 1]));
 		i++;
 	}
+	new_board->area = NULL;
 	return (new_board);
 }
 
@@ -78,6 +79,7 @@ t_board		*duplicate_board(t_board_cst board)
 //		printf("Dup board new :   %s\n", str);
 		i++;
 	}
+	new_board->area = NULL;
 	return (new_board);
 }
 
@@ -94,5 +96,7 @@ void	free_board(t_board *board)
 	}
 	free(board->board);
 	free(board->bit_mask);
+	if(board->area != NULL)
+		free(board->area);
 	free(board);
 }

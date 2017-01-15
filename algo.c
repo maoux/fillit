@@ -6,12 +6,71 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 18:20:29 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/15 16:01:48 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/15 16:57:59 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 #include "utils.h"
+
+static inline unsigned short get_offset(t_bmask a)
+{
+	unsigned short i;
+	i = 0;
+	while (!((a << i) & 0b10000000))
+		i++;
+	return (i);
+}
+
+static inline unsigned short get_last_offset(t_bmask a)
+{
+	unsigned short i;
+	i = 0;
+	while (!((a >> i) & 0b00000001))
+		i++;
+	return (8 - i);
+}
+
+static inline unsigned short min(unsigned short a, unsigned short b)
+{
+	return (a < b ? a : b);
+}
+
+static inline unsigned short max(unsigned short a, unsigned short b)
+{
+	return (a > b ? a : b);
+}
+
+static unsigned short	*board_size(t_board_cst board)
+{
+	unsigned short x;
+	unsigned short y;
+	unsigned short *ret;
+
+	ret = malloc(2 * sizeof(unsigned short *));
+	ret[0] = 0;
+	ret[1] = 0;
+	y = 0;
+	while (y < board->size)
+	{
+		x = 0;
+		while (x < board->size)
+		{
+			if (board->board[y][x] != '.')
+			{
+				// Define Y
+				ret[1] = max(ret[1], y);
+			
+				// Define X
+				ret[0] = max(ret[0], x);
+			}
+			x++;
+		}
+		y++;
+	}
+//	printf("TO %d:%d\n", ret[0], ret[1]);
+	return (ret);
+}
 
 static short int	can_place_line(unsigned short line, t_bmask *boardline, unsigned short x)
 {
@@ -88,6 +147,7 @@ static t_board *place_piece(unsigned short piece, t_board_cst board, unsigned sh
 			printf("%s\n", str);*/
 			line++;
 		}
+		stepboard->area = board_size(stepboard);
 		return (stepboard);
 	}
 	else
@@ -97,65 +157,6 @@ static t_board *place_piece(unsigned short piece, t_board_cst board, unsigned sh
 	}
 
 	return (NULL);
-}
-
-static inline unsigned short get_offset(t_bmask a)
-{
-	unsigned short i;
-	i = 0;
-	while (!((a << i) & 0b10000000))
-		i++;
-	return (i);
-}
-
-static inline unsigned short get_last_offset(t_bmask a)
-{
-	unsigned short i;
-	i = 0;
-	while (!((a >> i) & 0b00000001))
-		i++;
-	return (8 - i);
-}
-
-static inline unsigned short min(unsigned short a, unsigned short b)
-{
-	return (a < b ? a : b);
-}
-
-static inline unsigned short max(unsigned short a, unsigned short b)
-{
-	return (a > b ? a : b);
-}
-
-static unsigned short	*board_size(t_board_cst board)
-{
-	unsigned short x;
-	unsigned short y;
-	unsigned short *ret;
-
-	ret = malloc(2 * sizeof(unsigned short *));
-	ret[0] = 0;
-	ret[1] = 0;
-	y = 0;
-	while (y < board->size)
-	{
-		x = 0;
-		while (x < board->size)
-		{
-			if (board->board[y][x] != '.')
-			{
-				// Define Y
-				ret[1] = max(ret[1], y);
-			
-				// Define X
-				ret[0] = max(ret[0], x);
-			}
-			x++;
-		}
-		y++;
-	}
-//	printf("TO %d:%d\n", ret[0], ret[1]);
-	return (ret);
 }
 
 static t_board *get_best_board(t_board *candidate_board, t_board *best_board)
@@ -170,26 +171,26 @@ static t_board *get_best_board(t_board *candidate_board, t_board *best_board)
 		return (best_board);
 	if (best_board == NULL)
 		return (candidate_board);
-	candidate_size = board_size(candidate_board);
-	best_size = board_size(best_board);
+	candidate_size = candidate_board->area;
+	best_size = best_board->area;
 	if (max(candidate_size[0], candidate_size[1]) > max(best_size[0], best_size[1]))
 	{
-		free(candidate_size);
-		free(best_size);
+//		free(candidate_size);
+//		free(best_size);
 		return (best_board);
 	}
 	else 
 	{
 		if (max(candidate_size[0], candidate_size[1]) == max(best_size[0], best_size[1]))
 		{
-			free(candidate_size);
-			free(best_size);
+//			free(candidate_size);
+//			free(best_size);
 			return (best_board);
 		}
 		else
 		{
-			free(candidate_size);
-			free(best_size);
+//			free(candidate_size);
+//			free(best_size);
 			return (candidate_board);
 		}
 	}
@@ -235,11 +236,11 @@ static  t_board	*f_b_p_rec(t_env_cst pieces, t_board_cst board, unsigned char pi
 	y = 0;
 
 	int k = 0;
-	while (y < board->size)
+	while (y < board->size && ((*best) == NULL || (*best)->area[1] >= y))
 	{
 //		printf("--- Doing l%d ---\n", y);
 		x = 0;
-		while (x < board->size)
+		while (x < board->size && ((*best) == NULL || (*best)->area[0] >= x))
 		{
 			tmp_board = place_piece(pieces->tab[piece_idx], board, x, y, piece_idx);
 			/*/			if(x > 5)

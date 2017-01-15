@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:24:58 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/12 19:08:09 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/15 16:52:04 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_board
 	unsigned short	size; //No more than 26 chars, so no more than 26*4 width
 	unsigned char	**board; //Keep track of pieces letters, so use chars (Each cell can be used by 27 different types)
 	t_bmask	**bit_mask; // Same as board but in bits format
+	unsigned short *area;
 }	t_board;
 typedef const t_board * const t_board_cst;
 
