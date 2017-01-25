@@ -25,9 +25,9 @@ typedef struct	s_pieces
 {
 	unsigned char	size;
 	short int		*tab;
-}				t_env;
+}				t_pieces;
 
-typedef const t_env * const t_env_cst;
+typedef const t_pieces * const t_pieces_cst;
 typedef struct s_board
 {
 	t_ushort	size; //No more than 26 chars, so no more than 26*4 width
@@ -38,7 +38,7 @@ typedef struct s_board
 typedef const t_board * const t_board_cst;
 
 //fonction parsing appele par le main
-int					find_best_placement(const t_env * const pieces);
+int					find_best_placement(const t_pieces * const pieces);
 void				print_board(t_board_cst board);
 
 t_bmask sum_n_bits(t_ushort bits);
@@ -47,11 +47,13 @@ t_board	*duplicate_board(t_board_cst board);
 void    free_board(t_board *board);
 
 t_ushort  *get_piece_size(unsigned short piece);
-t_ushort  get_pieces_size(t_env_cst pieces);
+t_ushort  get_pieces_size(t_pieces_cst pieces);
 
 //fonction parsing appele par le main
-t_env		*read_file(const char *const file_name);
+t_pieces		*read_file(const char *const file_name);
 //fonction erreur appelant exit
 void		error();
+
+#include "utils.h"
 
 #endif

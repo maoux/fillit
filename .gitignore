@@ -2,3 +2,7 @@
 *~
 a.out
 *#*
+bin/
+fillit.cbp
+fillit.depend
+fillit.layout

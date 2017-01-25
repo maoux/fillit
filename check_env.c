@@ -40,7 +40,7 @@ static int						check_tetris(const t_ushort tetris)
 //tant que la piece n'est pas correct, on la décale a gauche 
 // si elle dépasse une certaine valeur, on arette la boucle, test a nouveau et
 // on en conclu si la piece est correct ou non
-int							check_env(t_env *env)
+int							check_env(t_pieces *env)
 {
 	int	test;
 	int	i;

@@ -61,16 +61,16 @@ static int				set_tab(int fd, t_ushort *tab, int *s)
 	return (1);
 }
 
-t_env						*read_file(const char *const file_name)
+t_pieces						*read_file(const char *const file_name)
 {
-	t_env		*env;
+	t_pieces		*env;
 	t_ushort	*tab;
 	int			fd;
 	int			size;
 
 	if ((fd = open(file_name, O_RDONLY)) < 0)
 		error();
-	if ((env = malloc(sizeof(t_env))) == NULL)
+	if ((env = malloc(sizeof(t_pieces))) == NULL)
 		error();
 	tab = (t_ushort*)malloc(sizeof(t_ushort) * 26);
 	if (tab == NULL)

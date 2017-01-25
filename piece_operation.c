@@ -29,7 +29,7 @@ t_ushort	*get_piece_size(unsigned short piece)
 	return (size);
 }
 
-t_ushort	get_pieces_size(t_env_cst pieces)
+t_ushort	get_pieces_size(t_pieces_cst pieces)
 {
 	t_ushort	w;
 	t_ushort	h;
