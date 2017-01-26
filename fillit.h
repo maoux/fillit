@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:24:58 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/12 18:07:32 by heynard          ###   ########.fr       */
+/*   Updated: 2017/01/21 23:58:55 by heynard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 # include <fcntl.h>
 # include <stdio.h>
+
+typedef	unsigned short int	t_usint;
 
 typedef struct	s_env
 {
