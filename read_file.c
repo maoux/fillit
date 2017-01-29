@@ -109,8 +109,10 @@ t_pieces		*read_file(const char *file_name, int size)
 	}
 	pieces[i] = '\0';
 	close(fd);
+	printf("Allo`c env\n");
 	if ((env = malloc(sizeof(t_pieces))) == NULL)
 		error();
 	env = init_pieces(env, pieces, 0, 0);
+	printf("Inited\n");
 	return (env);
 }
