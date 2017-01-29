@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:56:05 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/29 20:54:51 by heynard          ###   ########.fr       */
+/*   Updated: 2017/01/29 22:06:42 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ static t_pieces	*init_pieces(t_pieces *env, const char *pieces, int i, int j)
 	tab = (t_ushort *)ft_memalloc(sizeof(t_ushort) * 26);
 	k = 0;
 	buffer = ft_strnew(21);
-	printf("%s\n", pieces);
 	while (pieces[i] != '\0')
 	{
 		buffer[k++] = pieces[i];
@@ -109,10 +108,8 @@ t_pieces		*read_file(const char *file_name, int size)
 	}
 	pieces[i] = '\0';
 	close(fd);
-	printf("Allo`c env\n");
 	if ((env = malloc(sizeof(t_pieces))) == NULL)
 		error();
 	env = init_pieces(env, pieces, 0, 0);
-	printf("Inited\n");
 	return (env);
 }

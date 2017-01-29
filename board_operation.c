@@ -6,13 +6,13 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/10 15:39:58 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/29 21:14:01 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/29 22:02:21 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-static t_bmask		sum_n_bits(t_ushort bits)
+static t_bmask	sum_n_bits(t_ushort bits)
 {
 	t_bmask		ret;
 	t_ushort	i;
@@ -27,7 +27,7 @@ static t_bmask		sum_n_bits(t_ushort bits)
 	return (ret);
 }
 
-t_board		*create_board(t_ushort size)
+t_board			*create_board(t_ushort size)
 {
 	t_board		*new_board;
 	t_ushort	i;
@@ -37,7 +37,8 @@ t_board		*create_board(t_ushort size)
 	new_board = malloc(sizeof(t_board));
 	new_board->size = size;
 	new_board->board = malloc(size * sizeof(char*));
-	shorts_count = (size / BITS_PER_BMASK) + ((size % BITS_PER_BMASK) ? 1 : 0) + EXT_SIZE;
+	shorts_count = (size / BITS_PER_BMASK)
+		+ ((size % BITS_PER_BMASK) ? 1 : 0) + EXT_SIZE;
 	new_board->bit_mask = malloc(size * sizeof(t_bmask*));
 	while (i < size)
 	{
@@ -52,7 +53,7 @@ t_board		*create_board(t_ushort size)
 	return (new_board);
 }
 
-t_board		*duplicate_board(t_board_cst board)
+t_board			*duplicate_board(t_board_cst board)
 {
 	t_board		*new_board;
 	t_ushort	i;
@@ -69,15 +70,15 @@ t_board		*duplicate_board(t_board_cst board)
 	{
 		new_board->board[i] = ft_memcpy(malloc(board->size * sizeof(char)),
 										board->board[i], board->size);
-		new_board->bit_mask[i] = (t_bmask*)ft_memcpy(malloc(shorts_count * sizeof(t_bmask)),
-									board->bit_mask[i], shorts_count);
+		new_board->bit_mask[i] = (t_bmask*)ft_memcpy(malloc(
+			shorts_count * sizeof(t_bmask)), board->bit_mask[i], shorts_count);
 		i++;
 	}
 	new_board->area = 0;
 	return (new_board);
 }
 
-void		free_board(t_board *board)
+void			free_board(t_board *board)
 {
 	t_ushort	i;
 
@@ -92,4 +93,3 @@ void		free_board(t_board *board)
 	free(board->bit_mask);
 	free(board);
 }
-

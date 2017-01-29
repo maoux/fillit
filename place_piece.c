@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/29 17:15:35 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/29 21:09:01 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/29 22:10:46 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static short int can_place_line(t_ushort line, t_bmask *boardline, unsigned shor
 {
 	t_ushort	board_cells;
 
-	board_cells = *((t_ushort *)(&(((boardline))offset(x))));
+	board_cells = *((t_ushort *)(&(((boardline))OFFSET(x))));
 	return (board_cells & line ? 0 : 1);
 }
 
@@ -40,7 +40,7 @@ static void merge_lines(t_point_cst pt, t_board_cst board, char piece_sym, t_ush
 			board->board[pt->y + line][pt->x + 2] = piece_sym;
 		if (lval & 0x1000)
 			board->board[pt->y + line][pt->x + 3] = piece_sym;
-		bit_mask = &((((t_bmask*)board->bit_mask[pt->y + line]))offset(pt->x));
+		bit_mask = &((((t_bmask*)board->bit_mask[pt->y + line]))OFFSET(pt->x));
 		(*bit_mask) |= piece_l[line];
 		line++;
 	}
