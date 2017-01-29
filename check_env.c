@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/11 22:42:16 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/15 17:58:40 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/29 17:26:35 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int						check_tetris(const t_ushort tetris)
 //tant que la piece n'est pas correct, on la décale a gauche 
 // si elle dépasse une certaine valeur, on arette la boucle, test a nouveau et
 // on en conclu si la piece est correct ou non
-int							check_env(t_pieces *env)
+int							check_env(t_pieces_cst env)
 {
 	int	test;
 	int	i;
@@ -49,7 +49,7 @@ int							check_env(t_pieces *env)
 	while (i < env->size)
 	{
 		test = 1;
-		while ((env->tab[i] < 0x8000) && test)
+		while ((env->tab[i] < (t_ushort) 0x8000) && test)
 		{
 			if (!(check_tetris(env->tab[i])))
 				env->tab[i] = env->tab[i] << 1;
