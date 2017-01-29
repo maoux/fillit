@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/11 22:42:16 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/29 17:26:35 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/29 18:39:19 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static int						check_tetris(const t_ushort tetris)
 									0xE400, 0x4C40, 0x4E00, 0x8C80,
 									0x6C00, 0x8C40, 0xC600, 0x4C80,
 									0xF000, 0x8888, 0xCC00};
-
 	i = 0;
 	while (i < 19)
 	{

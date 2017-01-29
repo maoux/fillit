@@ -19,4 +19,3 @@ void print_pieces(const t_pieces * const pieces){
         printf("Piece %d is %s\n", i, byte_to_binary(pieces->tab[i]));
     }
 }
-
