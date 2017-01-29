@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:56:05 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/29 20:42:23 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/29 20:54:51 by heynard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,12 @@ static int		ft_size_file(const char *file_name)
 	return (size);
 }
 
-static t_ushort	check_buffer(char *buffer)
+static t_ushort	check_buffer(char *buffer, int position)
 {
-	t_ushort		piece;
-	int			position;
+	t_ushort	piece;
 	int			i;
 
 	piece = 0x0000;
-	position = 0;
 	i = 0;
 	if (buffer[4] != '\n'
 		|| buffer[9] != '\n'
@@ -57,43 +55,45 @@ static t_ushort	check_buffer(char *buffer)
 		}
 		i++;
 	}
+	if (piece == 0)
+		error();
 	return (piece);
 }
 
 static t_pieces	*init_pieces(t_pieces *env, const char *pieces, int i, int j)
 {
-	t_ushort		*tab;
+	t_ushort	*tab;
 	char		*buffer;
 	int			k;
 
-	if ((tab = (t_ushort *)malloc(sizeof(t_ushort) * 26)) == NULL)
-		error();
+	tab = (t_ushort *)ft_memalloc(sizeof(t_ushort) * 26);
 	k = 0;
 	buffer = ft_strnew(21);
+	printf("%s\n", pieces);
 	while (pieces[i] != '\0')
 	{
 		buffer[k++] = pieces[i];
 		if (k == 21 || pieces[i + 1] == '\0')
 		{
-			tab[j++] = check_buffer(buffer);
+			if (k != 20 && k != 21)
+				error();
+			tab[j++] = check_buffer(buffer, 0);
 			k = 0;
 		}
 		i++;
 	}
-	if (pieces[i - 1] != '\n'
-		|| (pieces[i - 2] != '.' && pieces[i - 2] != '#'))
+	if (pieces[i - 1] != '\n' || (pieces[i - 2] != '.' && pieces[i - 2] != '#'))
 		error();
 	env->tab = tab;
 	env->size = (unsigned char)j;
 	return (env);
 }
 
-t_pieces			*read_file(const char *file_name)
+t_pieces		*read_file(const char *file_name, int size)
 {
-	t_pieces		*env;
+	t_pieces	*env;
 	char		*pieces;
 	char		buf;
-	int			size;
 	int			fd;
 	int			i;
 
