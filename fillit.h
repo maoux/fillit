@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:24:58 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/29 18:35:12 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/29 21:13:31 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_board{
 	t_ushort	size; //No more than 26 chars, so no more than 26*4 width
 	unsigned char	**board; //Keep track of pieces letters, so use chars (Each cell can be used by 27 different types)
 	t_bmask	**bit_mask; // Same as board but in bits format
-	t_ushort *area;
+	t_ushort area;
 }	t_board;
 typedef const t_board * const t_board_cst;
 typedef struct s_point
@@ -43,7 +43,7 @@ typedef struct s_point
 typedef const t_point * const t_point_cst;
 int					find_best_placement(const t_pieces * const pieces);
 void				print_board(t_board_cst board);
-t_ushort *board_size(t_board_cst board);
+t_ushort board_size(t_board_cst board);
 t_board	*create_board(t_ushort size);
 t_board	*duplicate_board(t_board_cst board);
 void    free_board(t_board *board);

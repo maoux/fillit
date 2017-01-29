@@ -6,7 +6,7 @@
 /*   By: heynard <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 17:56:05 by heynard           #+#    #+#             */
-/*   Updated: 2017/01/29 18:51:56 by agermain         ###   ########.fr       */
+/*   Updated: 2017/01/29 20:42:23 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,8 @@ t_pieces			*read_file(const char *file_name)
 	}
 	pieces[i] = '\0';
 	close(fd);
-	printf("Alloc env\n");
 	if ((env = malloc(sizeof(t_pieces))) == NULL)
 		error();
 	env = init_pieces(env, pieces, 0, 0);
-	printf("Inited\n");
 	return (env);
 }
