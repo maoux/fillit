@@ -23,6 +23,7 @@ MAIN_FILE=main.c
 SRC_PREFIX=
 OBJ_PREFIX=obj
 INCLUDES=.
+SUB_MAKEABLE=libft/
 
 #code#
 SRC=algo.c \
@@ -51,10 +52,16 @@ OBJ=$(patsubst %.c, %.o, $(SRC))
 endif
 endif
 
-all: $(NAME)
+
+
+
+init:
+	@echo "Building $(NAME), checking for sub makefiles"
+
+all: init sublibs $(NAME)
 
 $(NAME): $(OBJ)
-	@echo "==>Objects successfully build. Building " $(NAME)
+	@echo "==>Objects successfully buildt. Building " $(NAME)
 ifeq ($(MODE),LIB)
 	@ar rc $@ $^
 	@echo "Archive build. Executing ranlib"
@@ -98,3 +105,10 @@ fclean: clean
 	@echo "==>Done!"
 
 re: fclean all
+
+sublibs: $(addsuffix .submake,$(SUB_MAKEABLE))
+
+%.submake: $(basename %)
+	@echo "==>Making with args '$(MAKECMDGOALS)' for $<"
+	@make $(MAKECMDGOALS) -C $<
+	@echo "==>Making for $< OK"
