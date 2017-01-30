@@ -27,7 +27,7 @@ static void merge_lines(t_point_cst pt, t_board_cst board, char piece_sym, t_ush
 	t_ushort	lval;
 	t_ushort	bit_offset;
 
- 	bit_offset = pt->x % 8;
+	 bit_offset = pt->x % 8;
 	line = 0;
 	while (line < 4 && pt->y + line < board->size)
 	{
@@ -40,7 +40,7 @@ static void merge_lines(t_point_cst pt, t_board_cst board, char piece_sym, t_ush
 			board->board[pt->y + line][pt->x + 2] = piece_sym;
 		if (lval & 0x1000)
 			board->board[pt->y + line][pt->x + 3] = piece_sym;
-		bit_mask = &((((t_bmask*)board->bit_mask[pt->y + line]))OFFSET(pt->x));
+		bit_mask = (t_ushort*)&((((t_bmask*)board->bit_mask[pt->y + line]))OFFSET(pt->x));
 		(*bit_mask) |= piece_l[line];
 		line++;
 	}
@@ -51,7 +51,6 @@ t_board *place_piece(t_ushort piece, t_board_cst board, t_point_cst pt, t_ushort
 	t_board *stepboard;
 	t_ushort piece_l[4];
 	t_ushort *piece_size;
-	t_ushort line;
 	t_ushort bit_offset;
 
 	piece_size = get_piece_size(piece);
@@ -67,8 +66,8 @@ t_board *place_piece(t_ushort piece, t_board_cst board, t_point_cst pt, t_ushort
 		 (!piece_l[1] || (pt->y + 1 < board->size && can_place_line(piece_l[1], board->bit_mask[pt->y + 1], pt->x))) &&
 		 (!piece_l[2] || (pt->y + 2 < board->size && can_place_line(piece_l[2], board->bit_mask[pt->y + 2], pt->x))) &&
 		 (!piece_l[3] || (pt->y + 3 < board->size && can_place_line(piece_l[3], board->bit_mask[pt->y + 3], pt->x)))))
-        return (NULL);
-    stepboard = duplicate_board(board);
+		return (NULL);
+	stepboard = duplicate_board(board);
 	merge_lines(pt, stepboard, 'A' + piece_idx, piece_l);
 	stepboard->area = board_size(stepboard);
 	return (stepboard);
