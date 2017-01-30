@@ -23,7 +23,12 @@ int		main(int argc, char **argv)
 	const t_pieces	*pieces;
 
 	if (argc != 2)
-		error();
+	{
+		ft_putstr("Error: missing pieces file\nUsage: ");
+		ft_putstr(argv[0]);
+		ft_putendl(" \033[4mfilename\033[0m");
+		exit(EXIT_FAILURE);
+	}
 	pieces = read_file(argv[1], 0);
 	if (check_env(pieces) < 0)
 		error();
