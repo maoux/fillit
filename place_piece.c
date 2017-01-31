@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/29 17:15:35 by agermain          #+#    #+#             */
-/*   Updated: 2017/02/01 00:41:15 by agermain         ###   ########.fr       */
+/*   Updated: 2017/02/01 00:46:45 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static t_dbl_bmask	get_bit_mask(t_bmask *boardline, t_ushort x)
 	t_dbl_bmask	bmask;
 	t_bmask		*board_mask;
 
-	board_mask = &((boardline)OFFSET(x));
+	board_mask = &(boardline[x / 8]);
 	bmask.bmask[0] = board_mask[1];
 	bmask.bmask[1] = board_mask[0];
-	return bmask;
+	return (bmask);
 }
 
 static short int	cpl(
@@ -71,29 +71,28 @@ t_board				*place_piece(
 			t_point_cst pt,
 			t_ushort piece_idx)
 {
-	t_board *stepboard;
-	t_ushort l[4];
-	t_ushort *piece_size;
-	t_ushort bit_offset;
+	t_board		*stepboard;
+	t_ushort	l[4];
+	t_ushort	*piece_size;
+	t_ushort	bit_offset;
 
 	piece_size = get_piece_size(piece);
-	if (	((PX + piece_size[0]) > b->size) ||
+	if (((PX + piece_size[0]) > b->size) ||
 			((PY + piece_size[1]) > b->size))
 		return (NULL);
 	free(piece_size);
 	bit_offset = PX % 8;
-	l[0] = (((t_ushort)(piece & 0xF000)) << 0)  >> bit_offset;
-	l[1] = (((t_ushort)(piece & 0x0F00)) << 4)  >> bit_offset;
-	l[2] = (((t_ushort)(piece & 0x00F0)) << 8)  >> bit_offset;
+	l[0] = (((t_ushort)(piece & 0xF000)) << 0) >> bit_offset;
+	l[1] = (((t_ushort)(piece & 0x0F00)) << 4) >> bit_offset;
+	l[2] = (((t_ushort)(piece & 0x00F0)) << 8) >> bit_offset;
 	l[3] = (((t_ushort)(piece & 0x000F)) << 12) >> bit_offset;
-	if(!(	(								cpl(l[0], b->bmask[PY + 0], PX))  &&
-		((!l[1]) || (PY + 1 < b->size &&	cpl(l[1], b->bmask[PY + 1], PX))) &&
-		((!l[2]) || (PY + 2 < b->size &&	cpl(l[2], b->bmask[PY + 2], PX))) &&
-		((!l[3]) || (PY + 3 < b->size &&	cpl(l[3], b->bmask[PY + 3], PX)))))
+	if (!((cpl(l[0], b->bmask[PY + 0], PX)) &&
+		((!l[1]) || (PY + 1 < b->size && cpl(l[1], b->bmask[PY + 1], PX))) &&
+		((!l[2]) || (PY + 2 < b->size && cpl(l[2], b->bmask[PY + 2], PX))) &&
+		((!l[3]) || (PY + 3 < b->size && cpl(l[3], b->bmask[PY + 3], PX)))))
 		return (NULL);
 	stepboard = duplicate_board(b);
 	merge_lines(pt, stepboard, 'A' + piece_idx, l);
 	stepboard->area = board_size(stepboard);
 	return (stepboard);
 }
-
