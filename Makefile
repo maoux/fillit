@@ -6,7 +6,7 @@
 #    By: agermain <agermain@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/05 01:56:18 by agermain          #+#    #+#              #
-#    Updated: 2017/01/07 23:27:07 by agermain         ###   ########.fr        #
+#    Updated: 2017/01/31 17:48:34 by agermain         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -23,7 +23,7 @@ MAIN_FILE=main.c
 SRC_PREFIX=
 OBJ_PREFIX=obj
 INCLUDES=.
-SUB_MAKEABLE=libft/
+SUB_MAKEABLE=./libft/
 
 #code#
 SRC=algo.c \
@@ -108,7 +108,7 @@ re: fclean all
 
 sublibs: $(addsuffix .submake,$(SUB_MAKEABLE))
 
-%.submake: $(basename %)
-	@echo "==>Making with args '$(MAKECMDGOALS)' for $<"
+%.submake: $(basename ./%)
+	@echo "==>Making with args '$(MAKECMDGOALS)' for $< $@"
 	@make $(MAKECMDGOALS) -C $<
 	@echo "==>Making for $< OK"
