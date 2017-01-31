@@ -6,7 +6,7 @@
 #    By: agermain <agermain@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/05 01:56:18 by agermain          #+#    #+#              #
-#    Updated: 2017/01/31 17:48:34 by agermain         ###   ########.fr        #
+#    Updated: 2017/01/31 18:13:30 by agermain         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -55,12 +55,10 @@ endif
 
 
 
-init:
-	@echo "Building $(NAME), checking for sub makefiles"
-
-all: init sublibs $(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJ)
+	@make -C libft/
 	@echo "==>Objects successfully buildt. Building " $(NAME)
 ifeq ($(MODE),LIB)
 	@ar rc $@ $^
@@ -91,6 +89,7 @@ endif
 	@$(CC) -o $@ -c $< -I$(INCLUDES) $(CFLAGS)
 
 clean:
+	@make clean -C libft/
 	@echo "Making clean..."
 	@if [ -z "$(OBJ_PREFIX)" ]; then\
 		rm -rf *.o;\
@@ -100,15 +99,9 @@ clean:
 	@echo "==>Done!"
 
 fclean: clean
+	@make fclean -C libft/
 	@echo "Removing lib..."
 	@rm -rf $(NAME)
 	@echo "==>Done!"
 
 re: fclean all
-
-sublibs: $(addsuffix .submake,$(SUB_MAKEABLE))
-
-%.submake: $(basename ./%)
-	@echo "==>Making with args '$(MAKECMDGOALS)' for $< $@"
-	@make $(MAKECMDGOALS) -C $<
-	@echo "==>Making for $< OK"

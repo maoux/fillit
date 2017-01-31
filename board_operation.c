@@ -39,13 +39,13 @@ t_board			*create_board(t_ushort size)
 	new_board->board = malloc(size * sizeof(char*));
 	shorts_count = (size / BITS_PER_BMASK)
 		+ ((size % BITS_PER_BMASK) ? 1 : 0) + EXT_SIZE;
-	new_board->bit_mask = malloc(size * sizeof(t_bmask*));
+	new_board->bmask = malloc(size * sizeof(t_bmask*));
 	while (i < size)
 	{
 		new_board->board[i] = ft_memset(ft_memalloc(size), '.', size);
-		new_board->bit_mask[i] = ft_memset(ft_memalloc(shorts_count), 0,
+		new_board->bmask[i] = ft_memset(ft_memalloc(shorts_count), 0,
 											shorts_count);
-		new_board->bit_mask[i][shorts_count - (1 + EXT_SIZE)] =
+		new_board->bmask[i][shorts_count - (1 + EXT_SIZE)] =
 					(t_bmask)sum_n_bits(((BITS_PER_BMASK - (size % 8)) % 8));
 		i++;
 	}
@@ -65,13 +65,13 @@ t_board			*duplicate_board(t_board_cst board)
 	new_board->board = malloc(board->size * sizeof(char*));
 	shorts_count = (board->size / BITS_PER_BMASK) +
 					((board->size % BITS_PER_BMASK) ? 1 : 0) + EXT_SIZE;
-	new_board->bit_mask = malloc(board->size * sizeof(t_bmask*));
+	new_board->bmask = malloc(board->size * sizeof(t_bmask*));
 	while (i < board->size)
 	{
 		new_board->board[i] = ft_memcpy(malloc(board->size * sizeof(char)),
 										board->board[i], board->size);
-		new_board->bit_mask[i] = (t_bmask*)ft_memcpy(malloc(
-			shorts_count * sizeof(t_bmask)), board->bit_mask[i], shorts_count);
+		new_board->bmask[i] = (t_bmask*)ft_memcpy(malloc(
+			shorts_count * sizeof(t_bmask)), board->bmask[i], shorts_count);
 		i++;
 	}
 	new_board->area = 0;
@@ -86,10 +86,10 @@ void			free_board(t_board *board)
 	while (i < board->size)
 	{
 		free(board->board[i]);
-		free(board->bit_mask[i]);
+		free(board->bmask[i]);
 		i++;
 	}
 	free(board->board);
-	free(board->bit_mask);
+	free(board->bmask);
 	free(board);
 }

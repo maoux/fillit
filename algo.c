@@ -6,7 +6,7 @@
 /*   By: agermain <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 18:20:29 by agermain          #+#    #+#             */
-/*   Updated: 2017/01/29 21:53:26 by agermain         ###   ########.fr       */
+/*   Updated: 2017/02/01 00:18:16 by agermain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,63 +24,39 @@ static t_board	*get_best_board(t_board *candidate, t_board *best)
 		return (candidate);
 }
 
-static t_board	*choose_best_board(t_board *candidate, t_board *best)
+static void		handle_tmp(
+							t_pieces_cst pieces,
+							t_board *tmp_board,
+							unsigned char piece_idx,
+							t_board **best)
 {
-	t_board *board;
-
-	board = get_best_board(candidate, best);
-	if (board == candidate)
+	if (tmp_board != NULL)
 	{
-		if (best != NULL)
-			free_board(best);
-	}
-	else
-	{
-		if (candidate != NULL)
-			free_board(candidate);
-	}
-	return (board);
-}
-
-static t_ushort	handle_tmp_board(
-									t_board *tmp,
-									t_board **best,
-									t_board **level_best,
-									t_ushort is_last)
-{
-	if (tmp != NULL)
-	{
-		if (get_best_board(tmp, *best) != tmp)
-		{
-			free_board(tmp);
-			return (-1);
-		}
+		if (get_best_board(tmp_board, *best) != tmp_board)
+			free(tmp_board);
 		else
 		{
-			if (is_last)
+			if (piece_idx + 1 == pieces->size)
 			{
-				*level_best = choose_best_board(tmp, *level_best);
-				*best = *level_best;
-				return (0);
+				if (*best != NULL)
+					free(*best);
+				*best = tmp_board;
 			}
 			else
-				return (1);
+				f_b_p_rec(pieces, tmp_board, piece_idx + 1, best);
 		}
 	}
-	return (-1);
 }
 
-static t_board	*f_b_p_rec(
+void			f_b_p_rec(
 							t_pieces_cst pieces,
 							t_board_cst board,
 							unsigned char piece_idx,
 							t_board **best)
 {
 	t_point		pt;
-	t_board		*best_board;
 	t_board		*tmp_board;
 
-	best_board = NULL;
 	pt.y = 0;
 	while (pt.y < board->size && ((*best) == NULL || (*best)->area >= pt.y))
 	{
@@ -89,15 +65,11 @@ static t_board	*f_b_p_rec(
 		{
 			tmp_board = place_piece(pieces->tab[piece_idx],
 									board, &pt, piece_idx);
-			if (handle_tmp_board(tmp_board, best, &best_board,
-								piece_idx + 1 == pieces->size) == 1)
-				best_board = choose_best_board(f_b_p_rec(
-						pieces, tmp_board, piece_idx + 1, best), best_board);
+			handle_tmp(pieces, tmp_board, piece_idx, best);
 			pt.x++;
 		}
 		pt.y++;
 	}
-	return (best_board);
 }
 
 int				find_best_placement(t_pieces_cst pieces)
