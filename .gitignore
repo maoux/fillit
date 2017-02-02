@@ -6,3 +6,5 @@ bin/
 fillit.cbp
 fillit.depend
 fillit.layout
+
+*.a
